@@ -1,0 +1,185 @@
+/*
+Составить общее текстовое описание БД и решаемых ею задач;
+Exist.ru — российский интернет-магазин запасных частей для автомобилей. 
+Однако, помимо продажи запчастей на портале магазина есть возможность добавлять свой автомобиль, 
+благодаря чему можно удобно просматривать запчасти, подходящие только к автомобилю пользователя.
+Также на портале есть возможность переписыватся с другими пользователями, 
+создавать ветки обсуждения решения тех или иных проблем, связанных с конкретной моделью автомобиля.
+*/
+
+/*
+минимальное количество таблиц - 10;
+скрипты создания структуры БД (с первичными ключами, индексами, внешними ключами);
+*/
+
+DROP DATABASE IF EXISTS exist;
+CREATE DATABASE exist;
+USE exist;
+
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+	id BIGINT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY, 
+    firstname VARCHAR(50),
+    lastname VARCHAR(50) COMMENT 'Фамиль',
+    email VARCHAR(120) UNIQUE,
+ 	password_hash VARCHAR(100), 
+	phone BIGINT UNSIGNED UNIQUE, 
+	
+    INDEX users_firstname_lastname_idx(firstname, lastname)
+) COMMENT 'юзеры';
+
+DROP TABLE IF EXISTS model_cars;
+CREATE TABLE model_cars(
+	id SERIAL, 
+	model VARCHAR(150),
+	brand VARCHAR(150)
+);
+
+DROP TABLE IF EXISTS media_types;
+CREATE TABLE media_types(
+	id SERIAL,
+    name VARCHAR(255),
+    created_at DATETIME DEFAULT NOW(),
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS media;
+CREATE TABLE media(
+	id SERIAL,
+    media_type_id BIGINT UNSIGNED NOT NULL,
+    user_id BIGINT UNSIGNED NOT NULL,
+  	body text,
+    filename VARCHAR(255),  	
+    size INT,
+	metadata JSON,
+    created_at DATETIME DEFAULT NOW(),
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (media_type_id) REFERENCES media_types(id)
+);
+
+DROP TABLE IF EXISTS media_types;
+CREATE TABLE media_types(
+	id SERIAL,
+    name VARCHAR(255),
+    created_at DATETIME DEFAULT NOW(),
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP
+);
+
+DROP TABLE IF EXISTS media;
+CREATE TABLE media(
+	id SERIAL,
+    media_type_id BIGINT UNSIGNED NOT NULL,
+    user_id BIGINT UNSIGNED NOT NULL,
+  	body text,
+    filename VARCHAR(255),  	
+    size INT,
+	metadata JSON,
+    created_at DATETIME DEFAULT NOW(),
+    updated_at DATETIME ON UPDATE CURRENT_TIMESTAMP,
+
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (media_type_id) REFERENCES media_types(id)
+); 
+
+DROP TABLE IF EXISTS cars;
+CREATE TABLE cars(
+	id SERIAL PRIMARY key ,
+	model_cars_id BIGINT UNSIGNED NOT NULL,
+	photo_id BIGINT UNSIGNED,
+	plate_number BIGINT UNSIGNED,
+	FOREIGN KEY (model_cars_id) REFERENCES model_cars(id),
+	FOREIGN KEY (photo_id) REFERENCES media(id)
+);
+
+DROP TABLE IF EXISTS cars_forums;
+CREATE TABLE cars_forums(
+	id SERIAL,
+	user_id BIGINT UNSIGNED NOT NULL,
+	model_cars_id BIGINT UNSIGNED NOT NULL,
+  
+	PRIMARY KEY (id, user_id, model_cars_id),
+    FOREIGN KEY (user_id) REFERENCES users(id),
+    FOREIGN KEY (model_cars_id) REFERENCES model_cars(id)
+);
+
+
+DROP TABLE IF EXISTS cars_comments;
+CREATE TABLE cars_comments(
+	id SERIAL,
+    user_id BIGINT UNSIGNED NOT NULL,
+    media_id BIGINT UNSIGNED,
+    created_at DATETIME DEFAULT NOW(),
+    model_cars_id BIGINT unsigned,
+    FOREIGN key (model_cars_id) references model_cars(id),
+	FOREIGN KEY (user_id) REFERENCES users(id),
+	FOREIGN KEY (media_id) REFERENCES media(id)
+
+);
+
+DROP TABLE IF EXISTS messages;
+CREATE TABLE messages (
+	id SERIAL,
+	from_user_id BIGINT UNSIGNED NOT NULL,
+    to_user_id BIGINT UNSIGNED NOT NULL,
+    body TEXT,
+    created_at DATETIME DEFAULT NOW(),
+
+    FOREIGN KEY (from_user_id) REFERENCES users(id),
+    FOREIGN KEY (to_user_id) REFERENCES users(id)
+);
+
+DROP TABLE IF EXISTS `profiles`;
+CREATE TABLE `profiles` (
+	user_id SERIAL,
+    gender CHAR(1),
+    birthday DATE, 
+	photo_id BIGINT UNSIGNED NULL,
+    created_at DATETIME DEFAULT NOW(),
+    hometown VARCHAR(100),
+    cars_id BIGINT UNSIGNED null,
+    
+    FOREIGN KEY (cars_id) REFERENCES cars(id),
+    FOREIGN KEY (photo_id) REFERENCES media(id)
+);
+
+ALTER TABLE `profiles` ADD CONSTRAINT fk_user_id
+FOREIGN KEY (user_id) REFERENCES users(id)
+ON UPDATE CASCADE 
+ON DELETE RESTRICT;
+
+DROP TABLE IF EXISTS products_type;
+CREATE TABLE products_type(
+	id bigint unsigned not null auto_increment primary key,
+	name VARCHAR(255)
+);
+
+DROP TABLE IF EXISTS products;
+CREATE TABLE products(
+	id SERIAL primary key,
+	amount BIGINT UNSIGNED,
+	products_type_id bigint unsigned not null,
+	
+	FOREIGN KEY (products_type_id) REFERENCES products_type(id)
+);
+
+DROP TABLE IF EXISTS orders;
+CREATE TABLE orders(
+	id SERIAL,
+	created_at DATETIME DEFAULT NOW(),
+	user_id BIGINT UNSIGNED not null, 
+	product_id BIGINT UNSIGNED not null,
+	
+	FOREIGN KEY (user_id) REFERENCES users(id),
+	FOREIGN KEY (product_id) references products(id)
+);
+
+drop table if exists logs;
+create table logs(
+id serial,
+vremya DATETIME not null,
+table_name varchar(100) not null,
+name varchar(100),
+id_table bigint unsigned not null
+) ENGINE=ARCHIVE;
