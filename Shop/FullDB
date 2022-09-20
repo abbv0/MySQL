@@ -1,0 +1,251 @@
+/* 
+Заполнение БД shop данными
+*/
+
+-- MariaDB dump 10.17  Distrib 10.4.15-MariaDB, for Linux (x86_64)
+--
+-- Host: mysql.hostinger.ro    Database: u574849695_25
+-- ------------------------------------------------------
+-- Server version	10.4.15-MariaDB-cll-lve
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `catalogs`
+--
+
+DROP TABLE IF EXISTS `catalogs`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `catalogs` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Название раздела',
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `unique_name` (`name`(10))
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Разделы интернет-магазина';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `catalogs`
+--
+
+LOCK TABLES `catalogs` WRITE;
+/*!40000 ALTER TABLE `catalogs` DISABLE KEYS */;
+INSERT INTO `catalogs` VALUES (1,'Процессоры'),(2,'Материнские платы'),(3,'Видеокарты'),(4,'Жесткие диски'),(5,'Оперативная память');
+/*!40000 ALTER TABLE `catalogs` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `discounts`
+--
+
+DROP TABLE IF EXISTS `discounts`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `discounts` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  `product_id` int(10) unsigned DEFAULT NULL,
+  `discount` float unsigned DEFAULT NULL COMMENT 'Величина скидки от 0.0 до 1.0',
+  `started_at` datetime DEFAULT NULL,
+  `finished_at` datetime DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `index_of_user_id` (`user_id`),
+  KEY `index_of_product_id` (`product_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Скидки';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `discounts`
+--
+
+LOCK TABLES `discounts` WRITE;
+/*!40000 ALTER TABLE `discounts` DISABLE KEYS */;
+/*!40000 ALTER TABLE `discounts` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `orders` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` int(10) unsigned DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `index_of_user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Заказы';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orders`
+--
+
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orders_products`
+--
+
+DROP TABLE IF EXISTS `orders_products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `orders_products` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `order_id` int(10) unsigned DEFAULT NULL,
+  `product_id` int(10) unsigned DEFAULT NULL,
+  `total` int(10) unsigned DEFAULT 1 COMMENT 'Количество заказанных товарных позиций',
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Состав заказа';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orders_products`
+--
+
+LOCK TABLES `orders_products` WRITE;
+/*!40000 ALTER TABLE `orders_products` DISABLE KEYS */;
+/*!40000 ALTER TABLE `orders_products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `products`
+--
+
+DROP TABLE IF EXISTS `products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `products` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Название',
+  `description` text COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Описание',
+  `price` decimal(11,2) DEFAULT NULL COMMENT 'Цена',
+  `catalog_id` int(10) unsigned DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  KEY `index_of_catalog_id` (`catalog_id`)
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Товарные позиции';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `products`
+--
+
+LOCK TABLES `products` WRITE;
+/*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` VALUES (1,'et','Quo cumque aut aut. Iure consequuntur et asperiores porro. Ullam ab perferendis ullam fugiat non. Enim dolor eaque explicabo blanditiis.',50832.30,1,'2016-10-06 21:27:59','1985-02-16 15:49:55'),(2,'non','Qui quam quasi error eos quo et. Ratione velit rerum libero ipsum vitae.',55.21,2,'1993-12-12 06:13:04','1972-08-24 01:04:03'),(3,'iste','Eum dolorum et quos cum placeat. Molestiae et alias et ducimus non aut perferendis facilis. Molestiae reiciendis mollitia qui ea. Sint velit rerum nihil.',1.48,3,'1971-08-25 21:13:39','2010-08-09 22:48:19'),(4,'qui','Dolore dolores mollitia voluptatem ut minus sed. Neque quia est est qui autem et. Ut velit non inventore molestiae et pariatur in.',0.00,4,'1980-02-11 17:26:07','2018-12-11 16:09:00'),(5,'a','Illum voluptatem sint quia natus alias. Voluptatibus esse sit dolorum rem. Commodi deserunt et nostrum quibusdam rerum enim. Vero odio quidem et qui minima.',23019703.89,5,'2014-04-17 17:23:54','2015-03-19 05:42:57'),(6,'ea','Vel aut eos magni ipsam mollitia rerum. Facilis reiciendis sit sunt cum consequatur ut. Amet tempora sed adipisci suscipit eaque saepe. Corrupti sint aspernatur ipsum excepturi hic pariatur.',31.38,1,'2005-11-16 15:59:49','1983-05-21 15:03:35'),(7,'repellat','Debitis eius corrupti est nam. Necessitatibus dolorem omnis suscipit aliquam occaecati non. Aut id praesentium cum et est eum est. Quia esse id nihil cupiditate.',0.00,2,'1992-02-23 13:29:42','1991-03-31 07:46:37'),(8,'blanditiis','Illo delectus quia est quod incidunt. Est error inventore et earum. Sed ex vero voluptas itaque est. Ut harum et cumque cupiditate qui.',3548.00,3,'1997-05-19 16:56:17','1973-01-10 18:10:18'),(9,'laborum','Optio et eius atque libero perspiciatis aliquid. A quae dolores consequatur quos. Soluta minus quia minima hic iste hic esse. Voluptatem quisquam excepturi quia distinctio dolores praesentium.',5100127.90,4,'1973-10-24 22:50:22','2003-11-29 21:37:39'),(10,'minima','Ullam impedit deleniti nostrum quo consequatur. Dolorem dolorem velit eius quisquam. Assumenda mollitia quos occaecati nostrum neque quod ducimus tenetur.',9561.21,5,'2014-07-16 01:18:18','2007-09-24 20:35:39'),(11,'eius','Eveniet eum rem eaque et ab ut quas labore. Modi rerum iure quia temporibus nemo et. Fugit occaecati ut facere nihil libero rerum illo veritatis.',25835332.80,1,'2011-02-08 20:12:06','1985-04-28 01:14:13'),(12,'modi','Provident aut et eius sed quos. Eaque et rerum sed dolor corporis ipsum animi quia. Occaecati ipsam doloremque officiis magnam. Quaerat sit porro quisquam autem.',278586.78,2,'1980-11-27 00:19:33','1977-08-05 16:17:38'),(13,'fuga','Et consequuntur vel omnis. Eos ipsam fugit natus voluptas odit exercitationem eaque et. Non aut iure iusto in nam veniam. Deleniti voluptatem nemo nostrum eius tempora. Assumenda dolorem numquam nulla dolores.',2375368.14,3,'1971-12-31 21:12:20','2021-07-01 08:11:27'),(14,'dignissimos','Culpa omnis soluta porro numquam molestiae reprehenderit quia. Facere quo facilis odio eveniet dicta. Sit quos voluptas veniam nostrum neque facere.',0.25,4,'2017-03-25 11:34:33','2016-01-20 19:20:44'),(15,'non','Earum ex porro possimus perferendis soluta et. Tempora omnis distinctio iste repudiandae odio mollitia. Qui nihil et voluptas eaque. Atque aliquam soluta excepturi cumque. Dolorem quod provident et fugiat.',43.73,5,'2020-11-30 11:58:55','1988-06-21 11:05:30'),(16,'occaecati','Consequatur itaque voluptatum cupiditate quia perferendis aut tenetur. Modi et dolorem quia minima. Possimus modi nam deserunt quo eligendi iste. Eveniet assumenda sequi explicabo delectus in.',198371943.23,1,'2000-09-05 20:52:32','2017-11-15 21:02:47'),(17,'officiis','Voluptatem dignissimos alias necessitatibus enim rerum aliquid eligendi nemo. Voluptatum est tenetur et eum dolor dignissimos ut. Aut ut occaecati qui autem enim. Fuga laboriosam laboriosam nulla voluptate doloribus quasi.',76.50,2,'2010-02-16 03:47:23','1983-12-01 21:59:52'),(18,'est','Iste sit voluptatum tempora sit veniam quia. Consequatur aut autem quam rerum magni fugiat. Dolores sapiente id cum nihil tempora soluta consectetur molestiae. Dignissimos blanditiis doloremque cum voluptatem.',13.21,3,'1992-08-21 23:13:25','1990-03-19 06:30:50'),(19,'dolorem','Nam corporis et veritatis similique aliquid. Sint necessitatibus laborum nihil dolores velit quia. Aut voluptatibus excepturi in facere natus dolor expedita.',2.40,4,'1982-10-10 13:05:48','1980-02-26 20:42:29'),(20,'officia','Omnis omnis est nostrum odio debitis autem. Et alias repellat praesentium incidunt officiis qui. Eveniet officia beatae consectetur dicta sed iusto.',1.59,5,'2007-09-26 18:56:53','2005-04-14 04:17:23'),(21,'in','Eos exercitationem excepturi recusandae dolore veniam maiores saepe. Porro consectetur facere cum minima ratione. Aut repudiandae consequatur voluptas quibusdam earum id. Sint excepturi minima cum qui distinctio animi.',3.34,1,'1988-08-11 19:17:17','2006-11-11 22:44:30'),(22,'assumenda','Laudantium magni quibusdam est autem et voluptas rerum debitis. Quos commodi ratione ut nisi. Voluptates nemo sint quia commodi earum inventore et ad.',1057042.58,2,'2015-09-26 23:42:05','2015-02-14 19:28:57'),(23,'delectus','Occaecati neque adipisci autem id. Illum amet natus et tenetur expedita molestiae. Et nostrum eius aliquam eligendi autem. Rerum dignissimos ab sunt quaerat.',0.00,3,'2020-03-25 18:02:54','2009-08-04 07:20:20'),(24,'sit','Eum odio ut iure veritatis illum ipsa explicabo. Quidem natus neque non unde. Rem quas numquam et pariatur ut et. Et veritatis voluptates iste aliquid quia et.',17.78,4,'1994-07-05 13:34:23','2009-08-26 13:15:15'),(25,'necessitatibus','Est dolore non vel et. Nobis ullam asperiores a delectus. Minus dolore laborum fugit id sed velit accusamus.',38366611.96,5,'2008-07-25 09:40:10','1987-05-23 09:43:44'),(26,'voluptatem','Aut iste et modi mollitia doloribus. Rerum itaque est praesentium similique molestias quasi explicabo qui. Quia qui quis delectus qui officiis at.',638207949.85,1,'1978-11-21 14:56:03','1995-08-02 22:19:40'),(27,'est','Explicabo quidem ut sit quia unde. Tempore iste praesentium molestias aperiam voluptate. Error quas quia perspiciatis veniam. Et expedita aliquam eum vel nisi.',2.49,2,'1973-06-25 16:18:30','1983-08-09 10:06:48'),(28,'iste','Quidem perspiciatis magnam et quaerat. Culpa asperiores voluptas eum vel. Est corporis et sequi sequi. Tenetur eos rerum est repellat voluptas dolorum.',4101.58,3,'2002-07-30 02:13:36','1972-04-27 07:56:34'),(29,'qui','Aut laborum eaque qui aliquam mollitia. Dolorum sunt earum iure tempore dolorem. Autem voluptate rerum dolor quidem ea ullam.',1269160.72,4,'1992-05-19 12:05:20','2008-01-14 15:12:29'),(30,'alias','Eos rerum sint vitae ut est autem. Et in ab ut. Sint alias dignissimos animi officiis.',29544.44,5,'1989-07-02 16:02:53','1980-04-04 15:20:40'),(31,'enim','Commodi tenetur quaerat unde impedit. Quam iure ab nisi itaque quod aut voluptatem. Facere ullam omnis eligendi odio eligendi pariatur quae.',1.28,1,'1995-05-16 18:48:49','2000-04-03 07:44:56'),(32,'quo','Quia recusandae quia odit soluta fuga maxime repellendus non. Quae itaque et blanditiis aliquid et quo. Eos accusantium quo rerum velit quasi.',43.73,2,'2003-03-09 17:28:31','1994-11-22 22:56:32'),(33,'numquam','Esse commodi aliquid ab molestiae. Harum ullam sint a. Distinctio officia ipsam animi quo voluptas enim. Illo accusamus velit nulla omnis.',149835.17,3,'2007-12-29 09:39:34','1980-02-17 14:54:02'),(34,'ad','Illo quia doloremque in aut aut. Facere nostrum eveniet voluptas molestias cum rem. Consequatur ducimus voluptatem quod sequi voluptas saepe et. Est et quod enim id voluptas error id.',0.00,4,'2017-10-16 15:22:22','2014-11-07 01:37:29'),(35,'illo','Molestiae autem ullam corrupti sunt. Numquam et est non enim ea sunt. Excepturi quia id officiis itaque aperiam odit ut. Sed labore voluptas non.',111.19,5,'1975-03-17 16:14:22','1992-07-29 21:09:41'),(36,'enim','Ut facilis aliquid animi aut id. Et repellat possimus quia laborum. Sapiente amet iure cumque magni voluptate.',0.00,1,'1970-04-14 04:18:49','2012-11-27 07:19:38'),(37,'corrupti','Ducimus ratione vel in eveniet voluptatem eaque et. Non voluptatem aut quaerat nemo culpa ullam corrupti. Sed eum aut molestias. Aut quia ipsam ut placeat maxime labore.',233980998.61,2,'2012-03-25 20:58:02','1992-02-05 21:27:05'),(38,'sit','Suscipit iure similique quo et facilis quos ut. Rem tenetur exercitationem ipsa reiciendis enim. Eos velit quae fuga assumenda repellendus fugiat numquam. Rerum veniam adipisci eligendi laboriosam recusandae laboriosam omnis.',446.48,3,'1992-02-10 14:35:18','2020-03-09 17:33:11'),(39,'quae','Quia voluptatem consequatur ducimus quia aut suscipit inventore aliquid. Quibusdam earum aspernatur est ullam. Officia architecto aperiam repellendus occaecati dolorem qui est.',8154.47,4,'2016-02-08 03:52:26','2007-06-17 04:31:26'),(40,'voluptas','A eos similique veniam velit molestiae. Nam qui autem ut modi. Perspiciatis dolores sit ipsa inventore sunt.',44741879.24,5,'2005-09-05 19:44:20','1989-02-17 09:00:44'),(41,'expedita','Neque dolorum sed nemo mollitia possimus incidunt cum quod. Nostrum voluptatem ea ut dolores sunt sunt. Id ab temporibus quo fuga dolores accusantium eos vel. Quaerat molestias qui id.',150.96,1,'2005-06-06 15:02:42','1998-10-25 11:24:28'),(42,'est','Sapiente quaerat et eius dicta rerum quia. Soluta modi ducimus provident. Dolorum ullam odit excepturi animi. Eaque nemo ea maxime doloremque non rerum nihil.',0.00,2,'2002-05-03 07:39:11','1975-01-28 08:51:22'),(43,'et','Quo ut nesciunt aut voluptatem hic molestias. Id omnis ut omnis asperiores accusantium. Quos neque molestiae ratione facilis blanditiis ratione. Ab aut accusantium et dolorem modi.',501041.00,3,'2006-06-12 03:25:06','1977-02-24 04:53:00'),(44,'laborum','Aut commodi ea recusandae commodi mollitia accusantium nisi. Dolor autem et iure quibusdam quos non eum. Eius excepturi vel et dolores laboriosam quae rerum. Maiores commodi recusandae veritatis sint harum.',4038.47,4,'1981-09-08 07:25:45','1979-10-24 05:50:39'),(45,'cum','Quis omnis ab porro hic sit quibusdam quia. Et dicta delectus labore ratione. Assumenda natus quae ad non. Et velit dolorem eos doloribus quidem numquam.',167.85,5,'1972-03-24 23:38:54','1982-10-08 15:39:17'),(46,'consequatur','Dicta possimus sunt minima voluptatum vero doloribus repellat ut. Amet sint nostrum quod dolor alias dicta laborum. Odit eum consequuntur dolorum quia quo illum possimus. Porro qui necessitatibus qui.',0.00,1,'1994-04-21 03:28:47','1974-01-03 08:29:51'),(47,'animi','Voluptas ut minus sed est esse atque. Nam illum non maxime quos debitis possimus incidunt facere.',43956219.23,2,'2015-05-10 11:56:50','2013-08-29 13:25:30'),(48,'aliquam','Neque aliquam rerum quia consectetur labore. Est rem rerum animi explicabo voluptatum. Eligendi libero nemo dolores quas et. Aut inventore est voluptatem saepe enim harum.',10.44,3,'2012-07-31 13:36:27','1991-01-01 20:08:06'),(49,'laudantium','Cupiditate rerum velit sit sit explicabo. Omnis accusamus molestiae nostrum modi veniam rerum nostrum. Commodi dolorem nulla voluptas rerum quisquam aliquam eligendi.',161572.30,4,'2013-11-19 02:04:20','1999-04-13 21:06:04'),(50,'minus','Non atque dolor ut veritatis odit dolores quo quisquam. Voluptas in tenetur minus molestiae odio est. Qui ut et magnam qui dolor nisi.',3259.26,5,'1980-07-29 11:05:59','2003-01-02 10:21:02'),(51,'eum','Repudiandae ea eaque explicabo incidunt et aspernatur. Saepe expedita et expedita quam. Illo qui beatae inventore. Tenetur aspernatur facere delectus id aliquam.',34481884.34,1,'1988-06-27 23:37:16','2001-11-22 05:58:58'),(52,'quos','Aut ipsa enim nemo eos est. Impedit iusto temporibus voluptatem aut quo eos. Exercitationem qui aliquam cum ut expedita sed sint.',227404400.23,2,'2006-11-12 21:13:40','1987-05-15 18:07:51'),(53,'ut','Itaque iusto nihil esse assumenda. Tempore et aut at est nulla dolores minus. Perspiciatis eligendi commodi dolorem alias optio officia molestias.',17825681.00,3,'1999-11-02 19:44:34','2018-08-14 20:32:47'),(54,'magni','Voluptatibus quisquam laboriosam sit soluta repellendus aliquam voluptatem. Aut non dolore cupiditate quasi nisi magnam. Officia eos laborum qui doloremque magni eos sed.',31.38,4,'1981-06-05 04:54:59','1992-04-07 16:19:28'),(55,'explicabo','Quisquam dolore quae placeat et. Delectus provident enim voluptas enim. Dolores nihil eos et quasi ipsam non qui. Non reiciendis enim hic corrupti.',6349.88,5,'1985-09-04 19:51:06','2016-02-01 05:31:17'),(56,'praesentium','Numquam sunt cum labore ipsum quaerat libero sunt reiciendis. Expedita qui dolorum adipisci non cumque rem. Possimus quia sapiente eum sint ut odit quam soluta. Quos aut voluptates quisquam dolorum illo ad odio.',1636662.00,1,'1975-10-26 21:45:20','1988-12-18 07:47:30'),(57,'magni','Quo dolorum est dolore ut et nihil ut. Ullam facere accusamus eligendi necessitatibus. Dolores dolorem recusandae et.',11955304.10,2,'2018-03-15 09:03:00','1992-08-03 16:24:52'),(58,'dolorem','Neque quis rerum omnis. Sequi et fuga accusamus deleniti. Deserunt non sed est atque velit iusto.',502769.17,3,'1977-03-24 15:54:37','1980-11-09 12:05:59'),(59,'ab','Nostrum reprehenderit perspiciatis voluptatem qui assumenda ratione est. Illum esse ullam quos illum. Vel architecto dignissimos fuga et porro aliquam placeat earum.',23.53,4,'2014-09-30 21:32:05','2001-10-07 08:41:52'),(60,'unde','Nobis ut facilis aut eos sed. Quos minima ipsum qui et praesentium. Illo necessitatibus non unde tenetur.',36.58,5,'1975-03-19 12:23:16','1984-04-02 10:42:48'),(61,'alias','Nam aut sit rerum placeat. Et rem itaque eos. Corrupti sed esse ut ut error. Provident sed dolore amet occaecati provident et ratione. Qui voluptatem consequatur quia autem est id.',28953.20,1,'1995-06-22 07:51:07','2019-08-31 02:58:18'),(62,'facilis','Velit est minus impedit et. Et id eligendi minima voluptatem.',746.44,2,'2001-09-20 15:41:10','1980-12-12 00:20:27'),(63,'facilis','Quis aperiam quia enim omnis et et rerum. Corrupti modi ut eveniet vel. Nobis tempora quo eum nam aperiam enim porro. Quae non voluptatem asperiores fugiat consequuntur voluptatem velit.',282747.05,3,'2016-08-01 11:15:14','1981-09-02 22:59:08'),(64,'optio','Aliquid cupiditate minus consequatur voluptas saepe. Omnis possimus beatae aperiam. Sint et et voluptates.',288690.60,4,'2021-07-08 09:51:39','1991-08-17 18:25:45'),(65,'commodi','Est doloremque natus et odio delectus atque et. Quo rerum quis veniam quaerat consectetur ut voluptates. Et consectetur amet ab nihil. Dolorem maxime rerum perferendis in. Omnis optio quaerat quos excepturi optio rem in.',11799631.18,5,'2020-11-30 22:10:25','2014-03-11 13:21:28'),(66,'dolorum','Suscipit hic aut ad sunt. Reiciendis voluptatibus sunt consequatur nisi inventore eum.',149503.57,1,'1976-10-11 20:24:40','1993-09-19 11:39:50'),(67,'soluta','Ex tempore velit qui veniam. Veritatis et et sequi voluptatem. Sint a animi quibusdam.',16.80,2,'2015-11-20 12:18:13','2013-09-12 00:43:44'),(68,'sapiente','Facere molestiae aut et labore laudantium ipsum. Rem qui qui aut placeat provident. Alias ex modi et esse reiciendis. Saepe cumque esse fugiat tenetur maiores porro consequatur.',0.00,3,'1995-08-26 13:29:45','1987-08-12 22:52:53'),(69,'deleniti','Adipisci vero voluptatem cupiditate natus corporis. Cumque sunt facilis quibusdam ratione. Voluptate qui sequi itaque reiciendis quod consequatur enim. Harum deserunt consectetur veniam iste magni.',10.00,4,'2012-08-19 16:47:03','2009-05-24 05:53:47'),(70,'nam','Provident reprehenderit commodi recusandae voluptates eveniet commodi. Dolores dolores placeat eos. Et ducimus laboriosam fugit. Incidunt commodi sed explicabo voluptatem facilis dolorum.',140.19,5,'1981-04-20 01:22:10','2001-11-02 06:01:28'),(71,'consequatur','Nihil ad est qui sed molestiae possimus. Odio quia iste aperiam provident eius fuga. Optio unde sed dolorem eum consequatur est.',57577609.00,1,'2000-06-30 11:59:12','1999-10-01 05:30:31'),(72,'aliquam','Qui rerum quas non qui. Sequi fugiat sed dolorem. Nemo perspiciatis temporibus sed voluptatem voluptas sequi. Molestiae quos autem praesentium aut ullam.',3287533.76,2,'2017-03-17 08:22:11','2009-08-16 18:55:30'),(73,'debitis','Eum expedita nisi soluta doloremque iste. Quia et iure eum iure id sint. Quod beatae quo mollitia. Temporibus iste vel unde voluptas nesciunt commodi.',11360.90,3,'2003-01-24 20:16:45','1979-08-28 21:44:49'),(74,'enim','Libero similique soluta doloribus. Qui dolorem aperiam at incidunt et. Suscipit asperiores nulla aspernatur. Explicabo id placeat qui quia aspernatur ipsum quidem.',1364.32,4,'2014-08-14 01:49:52','1982-02-23 20:22:34'),(75,'consequatur','Incidunt et dignissimos ut et non velit. Distinctio minus eum recusandae debitis dicta expedita omnis ut. Aut quo nobis aliquid ut harum aliquam est.',0.00,5,'1994-02-10 04:50:08','1977-12-03 03:36:33'),(76,'provident','Ullam quos aliquid odio eum fugit facilis. Mollitia nostrum sit ut tempora voluptatem nihil libero saepe.',3535.82,1,'1977-08-18 03:00:16','1995-06-28 13:19:33'),(77,'similique','Fuga corporis et sed sapiente aperiam saepe. Est deleniti corrupti ut dolores cumque impedit. Est in est omnis ex distinctio rem consequatur.',14.67,2,'1970-10-14 01:10:22','1972-12-02 14:19:49'),(78,'ullam','Et veniam maiores consequatur sit reiciendis alias voluptatem. Harum culpa voluptas dolorem provident quia et. Quaerat enim nostrum rerum saepe quod eum.',303.66,3,'2003-02-24 13:24:15','1985-08-29 15:42:59'),(79,'consequatur','At corrupti rerum autem vel laboriosam aut. Aliquid incidunt deleniti accusantium magnam. Dicta aut sed est excepturi tempora illo impedit repudiandae.',331.53,4,'2020-07-19 09:22:44','1983-09-17 15:00:29'),(80,'suscipit','Explicabo iste neque voluptatem dolor soluta possimus dolorem. Vero quam iste eaque repellat. Magnam adipisci ipsa voluptas aut. Sit aut aperiam ut eos mollitia.',21346.10,5,'2002-09-15 17:43:18','1988-05-17 08:09:36'),(81,'illum','Veniam veritatis illum aspernatur velit itaque deserunt iste. Velit enim molestiae id minus earum sapiente excepturi. Inventore molestiae consequatur qui eum nam nemo. Minus aut sed nihil corrupti aut cum quis.',416091041.34,1,'2019-05-21 06:40:41','1993-05-13 12:16:31'),(82,'molestiae','Doloremque dolor et autem fugiat quod ut non autem. Ipsam minima commodi sunt voluptate atque laborum.',854.50,2,'2011-06-13 17:20:10','1985-09-02 05:14:21'),(83,'rerum','Repudiandae dolor perspiciatis harum praesentium rem dignissimos. Ipsa est quae et. Veritatis quod assumenda consectetur neque suscipit. Sunt aperiam accusamus voluptatum quia vel est voluptatem.',8.82,3,'1974-05-14 13:16:32','2013-02-09 20:53:02'),(84,'non','Laboriosam laborum vel temporibus consectetur est dolorum voluptas. Voluptatem sit sequi quia soluta non qui nisi sed. Maiores nihil necessitatibus quidem similique quis praesentium recusandae eligendi.',1555.64,4,'2004-03-25 01:36:36','1998-11-29 16:32:19'),(85,'eos','Expedita ipsam cumque dicta dolor. Tempora provident et quia fugit amet provident. Et non amet velit doloribus.',118286572.20,5,'2005-07-17 01:13:47','1971-09-15 02:04:19'),(86,'aut','Neque adipisci aut sunt aspernatur sint reiciendis labore voluptatem. Possimus labore est odit aut dicta voluptatem numquam. At cupiditate accusantium explicabo placeat nisi ab sapiente.',41583711.52,1,'1975-01-05 12:47:34','2021-03-30 04:16:45'),(87,'natus','Ut illum in autem non. Deserunt alias voluptatem et enim non. Molestias ea excepturi consequatur ipsam quo.',1993.95,2,'2007-06-03 02:36:56','2014-12-15 08:00:36'),(88,'est','Officia deleniti animi esse est est occaecati ut. Impedit harum maxime vel praesentium est rerum. Quo et corrupti a rerum laboriosam officiis atque culpa. Voluptatem ea aut ut qui dolorem soluta.',17823.00,3,'1994-12-21 02:51:12','1973-02-13 07:23:34'),(89,'ipsam','Omnis laborum ut necessitatibus quo dolor explicabo recusandae. Dolor quia voluptas iusto eum. Quasi omnis dignissimos et deleniti consequatur natus reiciendis sit. Rerum autem ullam sit voluptatibus ut. Tenetur harum suscipit adipisci temporibus labore et.',14.73,4,'1990-04-15 06:44:05','2014-05-24 20:13:45'),(90,'aperiam','Consequatur adipisci tempore quo est est asperiores quia. Non fugit nobis in quis recusandae aut. Dolor modi alias dolores et non tenetur.',3058181.40,5,'2009-10-01 06:18:45','1972-07-17 18:26:02'),(91,'asperiores','Commodi rerum dolorum molestiae asperiores. Voluptatem ratione fugit maiores officiis. Ad sunt deserunt eum qui autem inventore. Vel quisquam sapiente quo quis debitis atque cum. Enim amet delectus et quasi molestias quaerat distinctio.',15750184.55,1,'2008-07-05 03:06:52','2003-08-30 05:56:12'),(92,'ut','Non neque eveniet quo et. Omnis veniam perferendis quis distinctio non sit rerum. Ea dolor in quia debitis.',1.40,2,'1981-11-28 08:41:16','1975-09-16 09:09:39'),(93,'earum','Ut quasi nostrum et inventore architecto natus quis. Voluptatem ut velit nisi et. Id nostrum quos et laborum ipsa amet quo.',26346.44,3,'2009-06-24 16:24:44','2013-02-01 02:35:00'),(94,'enim','Dolores eligendi omnis nostrum consequatur ea. Dolor et dolor et. Est corporis numquam nisi pariatur. Vel beatae eos dolores.',22.02,4,'1978-04-03 11:41:00','1972-11-28 20:26:03'),(95,'eos','Hic quia praesentium vero. Qui ex quo mollitia dolorem eius quaerat sequi.',19.28,5,'1978-09-01 21:32:18','1984-05-04 11:26:53'),(96,'quia','Aperiam dolor ut similique. Amet voluptatem totam nisi sint aut consequuntur totam. Excepturi eligendi amet iusto ut est quam.',265.12,1,'2018-01-06 10:44:08','1995-03-26 17:52:37'),(97,'velit','Asperiores omnis neque perspiciatis ab voluptatem vero. Et pariatur hic aliquam. Fuga ea velit quaerat non. Occaecati ut ducimus perspiciatis dolores eum.',174794.23,2,'2006-03-14 23:49:49','2005-10-30 08:21:16'),(98,'et','Qui unde consequatur dicta explicabo. Illum tempora quod deleniti itaque officia aspernatur. Praesentium omnis ut fugiat modi. Est vitae omnis et quae qui culpa.',16.40,3,'2006-01-24 22:48:23','1974-01-10 12:39:18'),(99,'excepturi','Laboriosam vel numquam atque excepturi possimus. In laboriosam tempora recusandae mollitia. Nesciunt est quis et. Esse sunt at dolores quas tempora fugiat ut.',3116617.00,4,'2003-11-05 15:04:11','2020-05-06 13:26:18'),(100,'possimus','Consequatur rerum sed numquam tenetur et sequi. Itaque qui mollitia magni et maxime non. Velit consequatur suscipit natus ut blanditiis. Sapiente porro nihil tenetur incidunt et.',307543.39,5,'2003-01-07 13:59:43','1980-10-07 07:49:18');
+/*!40000 ALTER TABLE `products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `storehouses`
+--
+
+DROP TABLE IF EXISTS `storehouses`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `storehouses` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Название',
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Склады';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `storehouses`
+--
+
+LOCK TABLES `storehouses` WRITE;
+/*!40000 ALTER TABLE `storehouses` DISABLE KEYS */;
+INSERT INTO `storehouses` VALUES (1,'quisquam','1975-11-04 10:01:50','1976-09-01 08:04:31'),(2,'dicta','2019-11-17 23:11:42','2002-10-31 12:01:23'),(3,'explicabo','1993-02-28 09:33:09','1978-05-05 18:43:49'),(4,'accusamus','2020-07-21 01:15:44','1984-02-25 13:52:22'),(5,'nisi','1980-06-13 14:39:56','1978-04-16 02:01:20'),(6,'officia','2002-05-20 15:29:37','1996-07-10 21:04:01'),(7,'qui','1977-01-21 01:09:20','1981-10-12 15:39:53'),(8,'est','2014-12-21 00:06:08','2015-12-22 14:49:42'),(9,'harum','1985-09-04 20:24:57','1997-05-20 02:03:57'),(10,'officiis','1985-03-18 09:04:35','1985-11-17 19:40:18'),(11,'eum','1983-09-30 18:22:24','2002-04-29 18:00:33'),(12,'itaque','2020-01-06 05:54:26','1980-05-23 17:24:40'),(13,'animi','1999-02-26 01:36:03','1980-02-10 15:04:25'),(14,'temporibus','1988-11-20 19:16:52','1986-05-03 12:48:20'),(15,'itaque','1975-12-07 23:14:03','1991-11-28 17:25:24'),(16,'ea','1982-01-23 19:09:29','1972-05-21 23:12:55'),(17,'est','1989-08-31 19:06:39','2007-06-25 10:04:05'),(18,'nemo','2014-11-17 04:15:29','2010-07-25 05:34:46'),(19,'est','1990-07-12 11:41:01','2016-01-07 01:19:02'),(20,'sit','2009-03-08 06:08:10','1995-02-19 04:18:03'),(21,'sunt','2009-03-16 22:54:22','1978-05-27 09:13:24'),(22,'nobis','1979-09-28 04:11:12','2011-05-26 11:40:17'),(23,'nostrum','1995-01-07 15:01:19','2019-10-12 09:55:30'),(24,'nihil','1998-01-18 01:18:45','1991-01-14 22:21:00'),(25,'corporis','1972-03-07 21:04:16','2007-11-24 23:57:09'),(26,'temporibus','2019-12-14 12:53:49','1971-02-12 18:06:41'),(27,'vitae','1984-03-20 15:35:59','2006-09-24 17:53:37'),(28,'deleniti','1979-08-19 16:15:16','2020-07-03 22:02:15'),(29,'officia','1990-06-03 08:53:26','2020-07-11 23:40:01'),(30,'voluptas','2005-10-24 14:05:54','2008-01-18 10:06:36'),(31,'eaque','2000-11-21 04:54:29','1971-09-16 16:14:54'),(32,'repellat','1978-01-15 15:06:19','1980-04-26 06:00:30'),(33,'et','2006-08-14 20:45:14','1970-01-29 03:00:12'),(34,'pariatur','2021-01-29 00:52:55','2013-04-03 06:01:17'),(35,'modi','2017-03-23 14:47:38','1972-01-26 04:44:40'),(36,'porro','1992-08-24 22:52:47','2016-11-10 10:39:46'),(37,'reprehenderit','1988-01-18 20:58:14','2008-12-29 15:42:52'),(38,'excepturi','1970-12-29 20:39:27','1991-04-04 02:16:51'),(39,'voluptatem','1974-07-10 06:59:13','2021-05-04 09:43:18'),(40,'iusto','1986-04-06 00:12:21','1976-04-09 00:24:01'),(41,'commodi','2000-06-29 08:59:29','1990-09-18 06:44:41'),(42,'quis','2006-09-19 17:05:27','2020-10-24 09:40:55'),(43,'non','1986-12-16 14:23:31','2011-06-07 08:18:39'),(44,'voluptates','1974-04-14 23:14:12','1979-09-30 08:00:32'),(45,'et','1977-01-12 23:18:47','2014-03-28 01:25:41'),(46,'velit','1992-04-18 14:22:03','1976-10-18 02:15:50'),(47,'molestias','1995-03-14 16:57:53','1983-04-15 03:28:46'),(48,'quae','1998-03-20 15:29:00','1972-04-08 21:08:53'),(49,'fuga','1980-03-11 08:06:15','1981-05-24 04:30:21'),(50,'illo','1995-01-22 04:40:22','1979-06-17 03:22:27'),(51,'ut','2009-03-11 18:29:15','1983-01-07 05:01:31'),(52,'accusantium','1972-04-24 13:32:36','2020-08-14 12:46:45'),(53,'sit','2017-12-02 14:45:39','2016-09-13 09:28:35'),(54,'magnam','1971-11-27 21:20:56','1972-06-10 13:38:00'),(55,'inventore','1998-12-24 03:07:00','2012-12-02 06:39:08'),(56,'labore','1990-09-07 23:39:56','2001-03-14 02:37:28'),(57,'quia','1995-06-13 04:24:00','2009-08-01 22:23:35'),(58,'unde','2011-08-26 22:15:16','1980-11-07 19:24:06'),(59,'commodi','1988-09-19 22:18:58','1978-08-28 20:18:17'),(60,'eum','2008-03-12 02:02:56','1989-07-31 03:45:30'),(61,'possimus','1981-12-29 12:34:49','1995-04-13 21:13:47'),(62,'consequuntur','1987-04-15 01:46:32','2000-02-16 13:30:29'),(63,'ut','1984-04-07 03:45:51','1990-01-05 20:03:50'),(64,'facere','1979-09-17 14:04:55','2014-06-24 03:04:19'),(65,'quia','2010-11-20 01:26:40','1994-11-09 03:00:47'),(66,'provident','1971-06-23 18:25:32','1997-10-15 10:55:29'),(67,'id','1988-02-18 00:14:31','1989-02-20 23:49:52'),(68,'voluptatem','1989-08-16 19:40:09','2017-07-08 04:05:35'),(69,'consequatur','1999-06-02 07:32:36','2017-02-02 04:53:23'),(70,'corporis','2006-05-15 06:39:04','1981-07-05 17:05:56'),(71,'et','1976-09-27 12:49:04','1984-08-23 05:07:12'),(72,'quis','1998-05-09 16:34:58','1986-11-14 03:34:51'),(73,'facilis','2013-04-09 02:34:17','1978-03-24 12:41:08'),(74,'quo','1994-05-11 04:24:27','1973-06-13 01:00:15'),(75,'aut','2007-05-23 12:58:59','1978-08-01 06:55:00'),(76,'aut','1982-12-14 23:45:25','1995-07-23 01:45:04'),(77,'ad','2008-07-29 20:02:00','1985-07-06 02:01:05'),(78,'inventore','1975-12-22 23:26:10','2020-09-15 14:02:37'),(79,'repudiandae','2020-06-21 15:20:55','2000-12-09 02:06:53'),(80,'ipsum','1989-11-20 07:29:43','1983-04-03 11:26:48'),(81,'doloremque','1976-04-10 17:38:12','2003-08-21 22:36:52'),(82,'numquam','1984-10-08 20:45:24','2014-11-20 20:51:52'),(83,'sit','1978-08-06 19:47:00','1984-11-15 10:04:24'),(84,'ex','2011-08-24 07:28:29','1980-01-05 04:38:26'),(85,'quasi','2014-02-05 15:06:26','2008-09-10 17:10:11'),(86,'id','1973-06-18 02:31:08','1997-01-25 01:31:51'),(87,'voluptatem','2009-03-01 23:12:47','1996-02-13 16:39:03'),(88,'nesciunt','1985-07-10 01:03:28','1996-11-08 05:11:45'),(89,'itaque','2007-06-07 09:28:19','2013-06-10 08:44:15'),(90,'laudantium','1994-02-16 21:19:04','1996-10-25 11:04:10'),(91,'eum','1990-09-05 21:51:45','2018-07-02 08:25:50'),(92,'et','1987-04-14 04:58:07','2003-03-04 06:29:10'),(93,'recusandae','2014-04-06 06:41:24','1978-06-05 06:27:10'),(94,'alias','2017-05-07 14:50:08','1999-06-28 17:07:37'),(95,'laboriosam','1996-03-09 12:45:46','2017-09-12 17:41:36'),(96,'sed','2018-11-19 18:54:37','1974-01-30 11:02:31'),(97,'ut','1987-03-02 21:59:11','2004-09-29 20:16:39'),(98,'unde','1980-03-23 12:45:57','1985-11-20 07:57:45'),(99,'itaque','1988-04-25 01:21:17','2018-06-11 11:38:33'),(100,'magni','1971-06-29 02:39:22','1982-10-28 07:41:06');
+/*!40000 ALTER TABLE `storehouses` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `storehouses_products`
+--
+
+DROP TABLE IF EXISTS `storehouses_products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `storehouses_products` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `storehouse_id` int(10) unsigned DEFAULT NULL,
+  `product_id` int(10) unsigned DEFAULT NULL,
+  `value` int(10) unsigned DEFAULT NULL COMMENT 'Запас товарной позиции на складе',
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Запасы на складе';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `storehouses_products`
+--
+
+LOCK TABLES `storehouses_products` WRITE;
+/*!40000 ALTER TABLE `storehouses_products` DISABLE KEYS */;
+INSERT INTO `storehouses_products` VALUES (1,1,1,NULL,'1999-05-21 13:42:55','2004-12-19 16:55:39'),(2,2,2,NULL,'1996-06-29 16:30:29','2011-09-18 11:10:03'),(3,3,3,NULL,'1999-12-21 21:39:49','2010-06-09 11:32:01'),(4,4,4,NULL,'1987-11-22 10:24:33','2010-01-25 09:24:59'),(5,5,5,NULL,'1996-09-04 12:59:39','1981-02-01 07:36:45'),(6,6,6,NULL,'2016-06-21 11:34:02','2017-05-27 20:11:59'),(7,7,7,NULL,'2020-07-21 18:35:54','2003-06-19 08:25:22'),(8,8,8,NULL,'1987-04-23 08:29:04','1986-03-24 17:12:29'),(9,9,9,NULL,'2008-04-22 03:56:53','1994-03-19 05:53:29'),(10,10,10,NULL,'1990-07-08 21:15:58','1985-05-17 09:52:17'),(11,11,11,NULL,'1977-03-22 16:25:18','1998-05-25 08:14:25'),(12,12,12,NULL,'1973-10-14 00:14:08','1998-03-18 12:43:08'),(13,13,13,NULL,'1990-12-16 18:03:15','1982-03-01 03:20:08'),(14,14,14,NULL,'2009-02-08 06:58:51','1979-06-23 14:54:33'),(15,15,15,NULL,'1992-10-04 23:23:56','2021-07-16 04:00:14'),(16,16,16,NULL,'1993-07-18 02:09:32','2005-03-09 15:55:47'),(17,17,17,NULL,'2018-10-09 04:39:54','2006-02-18 09:15:00'),(18,18,18,NULL,'2011-07-07 18:41:55','1998-07-29 16:19:49'),(19,19,19,NULL,'1998-02-16 10:51:18','2006-04-07 07:10:59'),(20,20,20,NULL,'2007-11-25 22:29:02','1998-09-09 05:45:54'),(21,21,21,NULL,'2011-03-27 10:40:50','2001-05-31 14:12:00'),(22,22,22,NULL,'1972-09-05 20:58:50','1985-08-08 15:18:21'),(23,23,23,NULL,'2018-06-21 18:20:33','1972-04-04 10:07:27'),(24,24,24,NULL,'2009-11-15 07:47:05','1974-12-07 17:53:32'),(25,25,25,NULL,'1981-09-17 00:41:34','2006-10-14 07:06:22'),(26,26,26,NULL,'1982-03-24 23:42:19','1985-01-12 22:34:14'),(27,27,27,NULL,'2009-12-06 05:48:54','1987-11-28 03:16:25'),(28,28,28,NULL,'1972-10-25 01:52:35','1983-12-11 20:14:58'),(29,29,29,NULL,'1980-11-13 19:01:42','2019-08-24 15:13:57'),(30,30,30,NULL,'1974-11-02 08:34:58','1983-08-07 09:22:42'),(31,31,31,NULL,'1995-11-01 12:11:47','1992-12-18 04:30:35'),(32,32,32,NULL,'1990-03-09 14:13:12','2014-02-06 13:08:02'),(33,33,33,NULL,'1970-11-02 18:15:59','1981-01-28 04:45:23'),(34,34,34,NULL,'1979-07-02 00:26:25','1976-03-25 17:33:11'),(35,35,35,NULL,'1983-03-17 12:55:49','1979-11-23 06:11:18'),(36,36,36,NULL,'1985-08-05 20:01:38','2002-05-13 05:52:36'),(37,37,37,NULL,'2007-02-14 01:51:36','2015-11-20 04:29:46'),(38,38,38,NULL,'1986-05-07 17:59:40','2005-11-12 03:21:57'),(39,39,39,NULL,'2004-09-02 11:30:57','1974-04-14 11:00:37'),(40,40,40,NULL,'1991-11-25 09:55:14','2015-12-26 04:42:52'),(41,41,41,NULL,'1991-06-06 19:15:46','1993-02-02 22:47:48'),(42,42,42,NULL,'1970-03-21 09:09:09','2015-12-24 16:11:09'),(43,43,43,NULL,'1994-01-22 19:28:42','2015-01-05 01:52:41'),(44,44,44,NULL,'1978-06-09 06:39:02','2019-08-28 13:24:58'),(45,45,45,NULL,'1985-09-01 20:01:30','1981-10-20 12:42:36'),(46,46,46,NULL,'1986-07-19 06:29:27','2020-12-24 04:57:27'),(47,47,47,NULL,'1974-07-30 12:03:22','1985-04-23 00:42:06'),(48,48,48,NULL,'1981-01-15 22:00:19','2001-12-17 20:30:18'),(49,49,49,NULL,'1993-09-28 17:16:29','1973-12-01 20:02:06'),(50,50,50,NULL,'1992-09-24 09:19:04','1985-11-20 01:22:58'),(51,51,51,NULL,'1979-12-19 23:29:04','1990-11-06 21:12:44'),(52,52,52,NULL,'1984-11-05 07:01:54','1977-04-24 18:53:56'),(53,53,53,NULL,'1995-03-05 13:46:23','2005-05-14 16:54:54'),(54,54,54,NULL,'2008-03-14 12:41:27','1981-12-15 03:58:25'),(55,55,55,NULL,'1980-07-24 03:27:05','1998-08-16 19:00:55'),(56,56,56,NULL,'1996-03-13 10:18:21','1998-08-25 04:53:32'),(57,57,57,NULL,'1999-08-12 07:43:18','1985-03-28 13:04:32'),(58,58,58,NULL,'1994-04-04 17:40:24','1989-03-20 18:35:58'),(59,59,59,NULL,'1995-12-16 05:27:03','1996-08-12 04:45:43'),(60,60,60,NULL,'2014-03-27 15:14:51','1986-10-20 00:59:08'),(61,61,61,NULL,'2002-01-21 00:47:35','1997-08-28 14:59:13'),(62,62,62,NULL,'1978-04-19 23:44:34','1994-07-25 14:43:18'),(63,63,63,NULL,'1978-06-29 23:06:35','2012-05-11 21:26:50'),(64,64,64,NULL,'2015-10-14 14:52:47','1993-01-20 19:06:18'),(65,65,65,NULL,'2014-09-09 20:38:50','1974-11-22 19:44:02'),(66,66,66,NULL,'1994-05-27 21:05:00','1976-08-31 19:28:13'),(67,67,67,NULL,'2004-05-25 00:39:28','1986-04-17 11:08:12'),(68,68,68,NULL,'1998-03-10 11:22:25','1981-10-24 10:17:53'),(69,69,69,NULL,'1977-03-12 05:36:03','1998-10-17 14:43:27'),(70,70,70,NULL,'1980-10-05 16:56:23','2020-06-30 01:03:11'),(71,71,71,NULL,'1997-10-10 11:07:42','1988-11-13 00:03:39'),(72,72,72,NULL,'1975-03-26 14:56:36','2018-08-30 16:42:47'),(73,73,73,NULL,'2011-06-12 02:46:33','1986-09-20 12:39:47'),(74,74,74,NULL,'1987-10-16 20:00:12','1970-04-05 05:35:29'),(75,75,75,NULL,'2020-09-12 15:02:45','2021-02-20 02:47:57'),(76,76,76,NULL,'2015-12-02 16:57:59','1979-08-17 19:06:32'),(77,77,77,NULL,'2012-12-25 22:53:39','2006-07-15 00:29:39'),(78,78,78,NULL,'1998-02-20 13:44:20','2000-10-07 04:09:51'),(79,79,79,NULL,'1988-12-12 15:53:11','2017-08-30 21:19:31'),(80,80,80,NULL,'1983-12-04 23:06:32','1988-06-23 17:33:12'),(81,81,81,NULL,'2011-10-01 15:55:46','1990-11-25 20:59:26'),(82,82,82,NULL,'2017-12-05 12:44:21','2008-06-15 14:10:37'),(83,83,83,NULL,'1994-01-22 15:01:52','1989-06-01 16:40:37'),(84,84,84,NULL,'1999-02-19 07:04:41','2004-05-21 23:38:34'),(85,85,85,NULL,'2002-02-08 15:24:03','2016-07-29 12:53:01'),(86,86,86,NULL,'1976-10-29 06:57:44','1980-12-03 17:12:04'),(87,87,87,NULL,'1979-12-22 19:34:16','2005-04-14 09:05:21'),(88,88,88,NULL,'2014-04-08 23:32:53','2016-02-13 05:23:01'),(89,89,89,NULL,'1980-06-11 13:26:52','2000-10-06 06:25:58'),(90,90,90,NULL,'1995-03-09 02:58:27','1979-09-21 00:04:21'),(91,91,91,NULL,'1992-08-09 16:05:57','2021-03-01 13:30:29'),(92,92,92,NULL,'1981-09-14 06:15:45','1996-09-25 04:17:49'),(93,93,93,NULL,'1990-10-04 21:42:03','1971-04-30 20:43:15'),(94,94,94,NULL,'2003-08-07 08:44:12','1984-06-20 07:01:07'),(95,95,95,NULL,'2008-07-15 10:19:08','1971-09-30 12:52:00'),(96,96,96,NULL,'1992-06-19 06:07:15','1981-07-21 01:49:58'),(97,97,97,NULL,'2020-02-05 15:53:35','1974-04-02 07:52:35'),(98,98,98,NULL,'2007-02-20 05:45:15','1970-06-15 21:09:22'),(99,99,99,NULL,'1977-08-20 13:01:18','1985-01-10 08:36:42'),(100,100,100,NULL,'2019-07-25 14:26:56','1993-02-09 10:23:45');
+/*!40000 ALTER TABLE `storehouses_products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Имя покупателя',
+  `birthday_at` date DEFAULT NULL COMMENT 'Дата рождения',
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='Покупатели';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'Геннадий','1990-10-05','2021-09-11 17:50:09','2021-09-11 17:50:09'),(2,'Наталья','1984-11-12','2021-09-11 17:50:09','2021-09-11 17:50:09'),(3,'Александр','1985-05-20','2021-09-11 17:50:09','2021-09-11 17:50:09'),(4,'Сергей','1988-02-14','2021-09-11 17:50:09','2021-09-11 17:50:09'),(5,'Иван','1998-01-12','2021-09-11 17:50:09','2021-09-11 17:50:09'),(6,'Мария','1992-08-29','2021-09-11 17:50:09','2021-09-11 17:50:09');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
+-- Dump completed on 2021-09-11 17:51:59
