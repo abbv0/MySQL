@@ -1,0 +1,388 @@
+/*
+скрипты наполнения БД данными;
+*/
+
+-- MariaDB dump 10.17  Distrib 10.4.15-MariaDB, for Linux (x86_64)
+--
+-- Host: mysql.hostinger.ro    Database: u574849695_22
+-- ------------------------------------------------------
+-- Server version	10.4.15-MariaDB-cll-lve
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+/*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
+/*!40103 SET TIME_ZONE='+00:00' */;
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `cars`
+--
+
+USE exist;
+
+DROP TABLE IF EXISTS `cars`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cars` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `model_cars_id` bigint(20) unsigned NOT NULL,
+  `photo_id` bigint(20) unsigned DEFAULT NULL,
+  `plate_number` bigint(20) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `model_cars_id` (`model_cars_id`),
+  KEY `photo_id` (`photo_id`),
+  CONSTRAINT `cars_ibfk_1` FOREIGN KEY (`model_cars_id`) REFERENCES `model_cars` (`id`),
+  CONSTRAINT `cars_ibfk_2` FOREIGN KEY (`photo_id`) REFERENCES `media` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cars`
+--
+
+LOCK TABLES `cars` WRITE;
+/*!40000 ALTER TABLE `cars` DISABLE KEYS */;
+INSERT INTO `cars` VALUES (1,1,1,466485),(2,2,2,18),(3,3,3,240961),(4,4,4,0),(5,5,5,55083),(6,6,6,5),(7,7,7,0),(8,8,8,399928),(9,9,9,0),(10,10,10,235),(11,11,11,0),(12,12,12,3347),(13,13,13,15497),(14,14,14,5),(15,15,15,70),(16,16,16,4952),(17,17,17,36),(18,18,18,21623362),(19,19,19,76),(20,20,20,0);
+/*!40000 ALTER TABLE `cars` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cars_comments`
+--
+
+DROP TABLE IF EXISTS `cars_comments`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cars_comments` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `media_id` bigint(20) unsigned DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `model_cars_id` bigint(20) unsigned DEFAULT NULL,
+  UNIQUE KEY `id` (`id`),
+  KEY `model_cars_id` (`model_cars_id`),
+  KEY `user_id` (`user_id`),
+  KEY `media_id` (`media_id`),
+  CONSTRAINT `cars_comments_ibfk_1` FOREIGN KEY (`model_cars_id`) REFERENCES `model_cars` (`id`),
+  CONSTRAINT `cars_comments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `cars_comments_ibfk_3` FOREIGN KEY (`media_id`) REFERENCES `media` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cars_comments`
+--
+
+LOCK TABLES `cars_comments` WRITE;
+/*!40000 ALTER TABLE `cars_comments` DISABLE KEYS */;
+INSERT INTO `cars_comments` VALUES (1,1,1,'2001-11-06 14:59:00',1),(2,2,2,'1984-07-26 01:56:27',2),(3,3,3,'2008-08-28 05:04:16',3),(4,4,4,'2015-12-07 05:23:34',4),(5,5,5,'2015-11-14 09:17:03',5),(6,6,6,'1975-05-23 15:20:58',6),(7,7,7,'1990-04-05 15:21:06',7),(8,8,8,'1972-01-27 00:49:28',8),(9,9,9,'1994-09-23 18:13:12',9),(10,10,10,'2011-08-30 09:54:36',10),(11,11,11,'1983-08-08 12:31:52',11),(12,12,12,'1978-03-04 12:09:44',12),(13,13,13,'2002-05-13 02:48:05',13),(14,14,14,'2021-04-13 08:00:50',14),(15,15,15,'1985-10-29 17:59:49',15),(16,16,16,'2020-02-08 10:08:00',16),(17,17,17,'2014-06-06 16:13:12',17),(18,18,18,'2021-01-03 14:00:19',18),(19,19,19,'2019-07-13 12:05:53',19),(20,20,20,'1996-09-30 04:36:40',20);
+/*!40000 ALTER TABLE `cars_comments` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `cars_forums`
+--
+
+DROP TABLE IF EXISTS `cars_forums`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `cars_forums` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `model_cars_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`,`user_id`,`model_cars_id`),
+  UNIQUE KEY `id` (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `model_cars_id` (`model_cars_id`),
+  CONSTRAINT `cars_forums_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `cars_forums_ibfk_2` FOREIGN KEY (`model_cars_id`) REFERENCES `model_cars` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `cars_forums`
+--
+
+LOCK TABLES `cars_forums` WRITE;
+/*!40000 ALTER TABLE `cars_forums` DISABLE KEYS */;
+INSERT INTO `cars_forums` VALUES (1,1,1),(2,2,2),(3,3,3),(4,4,4),(5,5,5),(6,6,6),(7,7,7),(8,8,8),(9,9,9),(10,10,10),(11,11,11),(12,12,12),(13,13,13),(14,14,14),(15,15,15),(16,16,16),(17,17,17),(18,18,18),(19,19,19),(20,20,20);
+/*!40000 ALTER TABLE `cars_forums` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `media`
+--
+
+DROP TABLE IF EXISTS `media`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `media` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `media_type_id` bigint(20) unsigned NOT NULL,
+  `user_id` bigint(20) unsigned NOT NULL,
+  `body` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `filename` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `size` int(11) DEFAULT NULL,
+  `metadata` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin DEFAULT NULL CHECK (json_valid(`metadata`)),
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  UNIQUE KEY `id` (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `media_type_id` (`media_type_id`),
+  CONSTRAINT `media_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `media_ibfk_2` FOREIGN KEY (`media_type_id`) REFERENCES `media_types` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `media`
+--
+
+LOCK TABLES `media` WRITE;
+/*!40000 ALTER TABLE `media` DISABLE KEYS */;
+INSERT INTO `media` VALUES (1,1,1,'Sint et qui dolores. Dolorem a harum tempore. A harum eos consequatur ut ut quidem sed.','rerum',72004,NULL,'2007-10-04 01:57:41','1999-08-18 12:40:00'),(2,2,2,'Fugiat quisquam qui consequuntur. Maiores ab aspernatur occaecati voluptas qui facere at. In amet culpa accusantium eaque. Aut facilis ipsam corporis maiores est.','deleniti',84,NULL,'2007-07-02 23:19:11','2014-12-14 00:27:21'),(3,3,3,'Expedita et cumque fugiat ea cupiditate. Iusto ut impedit et praesentium qui quaerat voluptas qui. Dolorem aut consequatur autem odio ut ipsam. Dolorem qui est officiis. Ut et sequi amet facere optio id.','doloremque',885,NULL,'1993-10-09 04:38:43','1997-10-15 22:16:43'),(4,4,4,'Atque consequatur et illo et laboriosam repellendus qui. Recusandae repellat ipsum voluptas temporibus debitis. Aut voluptatem et dolores atque sit. Voluptatibus et praesentium inventore debitis doloremque ut cum. Optio nobis sed numquam quam.','eum',592096,NULL,'2008-06-13 07:05:09','1981-05-20 18:41:09'),(5,5,5,'Laborum voluptates quod velit praesentium. Enim vel dignissimos voluptates delectus quo sequi. Iusto sint porro odit est saepe cum veritatis.','blanditiis',24871439,NULL,'2011-01-07 06:01:21','2020-07-18 18:15:20'),(6,6,6,'Ducimus omnis excepturi ex tempore repellendus. Recusandae sint deleniti nobis aut inventore. Possimus nulla repellat ex et consequatur voluptatem ducimus. Laborum ad maxime accusantium similique maiores minima corrupti.','cum',271800196,NULL,'2007-03-15 06:47:34','2004-02-19 15:16:26'),(7,7,7,'Et qui praesentium eligendi a. Ducimus consectetur aperiam velit fugit. Porro perferendis voluptatem non qui.','nisi',0,NULL,'1991-05-12 11:05:58','2016-12-20 13:03:33'),(8,8,8,'Aliquam necessitatibus dicta repellendus dolore minus dolorem quibusdam id. Eius placeat enim consequatur et. Et qui ullam sit deleniti reprehenderit reiciendis. Nostrum dolor architecto et rerum.','doloribus',59586420,NULL,'2010-07-09 16:53:08','1975-11-28 05:55:14'),(9,9,9,'Cum vero molestiae quia veniam reiciendis. Alias doloremque velit soluta quia minima beatae. Nostrum quia vel aut ut blanditiis quas. Aut rerum molestiae molestias qui accusantium ut et.','possimus',74037154,NULL,'2005-03-08 11:46:10','1976-03-13 20:48:48'),(10,10,10,'Minima fugiat vero aut dignissimos quia. Sed a sint sapiente autem. Magni blanditiis sequi dolor dolore et.','accusamus',3336724,NULL,'2021-07-06 06:48:49','1974-01-19 20:31:41'),(11,11,11,'Sint pariatur atque autem dolores at eaque odio. Sed omnis voluptas ea non.','pariatur',140,NULL,'2001-09-25 01:26:16','1994-05-27 07:41:53'),(12,12,12,'Deserunt cupiditate amet minima. Qui ad laborum ad nesciunt. Culpa consequatur odit qui. Voluptatum nihil ex praesentium voluptas reiciendis in blanditiis.','sed',8296899,NULL,'2001-08-02 10:04:04','1977-09-11 12:45:11'),(13,13,13,'Unde minus rerum qui sed. Temporibus quo blanditiis deleniti sunt amet dolor deserunt cupiditate. Laboriosam et in dolorem culpa quis reprehenderit porro.','libero',670,NULL,'1987-07-09 01:29:12','2014-08-28 23:24:21'),(14,14,14,'Fugiat nam id rem. Ea amet dolor ratione nostrum quo eos. Nemo ut tempore veritatis in repellat quis.','autem',0,NULL,'1997-07-25 10:06:15','2000-05-10 21:00:16'),(15,15,15,'Quis nesciunt minus dolorem asperiores voluptatem eius. Quo quasi cupiditate et quisquam repellat eaque totam eos. Dolorem quam voluptatem ad autem ea molestiae aut fuga. Enim in aut dolor vero quaerat.','exercitationem',75120,NULL,'2004-08-10 00:30:59','2013-12-22 01:05:36'),(16,16,16,'Hic aut laboriosam voluptas est non voluptatem. Sint rerum minima similique minus suscipit laudantium dolor.','rerum',8477,NULL,'1989-09-27 03:10:00','2000-06-28 23:00:34'),(17,17,17,'Est enim dolore sit fugiat id consequatur. Quasi voluptatum reprehenderit qui perspiciatis. Quam repudiandae saepe quisquam sint et quo. Voluptate laudantium quis aliquam nisi.','tempore',115229,NULL,'1970-02-26 17:00:48','2019-03-15 09:38:58'),(18,18,18,'Cupiditate suscipit quibusdam voluptatum nihil cum nemo et ex. Et doloribus non aut sed quis. Aliquid nam ut neque excepturi.','sed',782,NULL,'2005-07-04 17:28:17','2013-01-27 07:47:10'),(19,19,19,'Voluptatum eveniet adipisci et tempore earum suscipit nemo. Sit debitis exercitationem non laboriosam commodi consequatur nihil. Aspernatur voluptas perspiciatis cum recusandae. Quisquam debitis aut fuga tenetur.','enim',8,NULL,'2006-05-29 00:07:53','2011-03-18 20:50:42'),(20,20,20,'Cum minus voluptates enim placeat. Eligendi minus rem similique velit. Repellendus voluptatem blanditiis sit id rerum vitae sunt.','tempora',522283,NULL,'2005-04-15 16:25:21','2010-01-04 14:17:44');
+/*!40000 ALTER TABLE `media` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `media_types`
+--
+
+DROP TABLE IF EXISTS `media_types`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `media_types` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `updated_at` datetime DEFAULT NULL ON UPDATE current_timestamp(),
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `media_types`
+--
+
+LOCK TABLES `media_types` WRITE;
+/*!40000 ALTER TABLE `media_types` DISABLE KEYS */;
+INSERT INTO `media_types` VALUES (1,'consectetur','2011-07-13 12:41:35','1987-06-04 03:57:43'),(2,'aspernatur','1980-01-30 22:19:34','1989-11-01 14:29:02'),(3,'qui','1978-03-06 07:29:34','1978-04-04 02:18:37'),(4,'cupiditate','2003-05-06 23:24:44','1970-03-19 14:02:38'),(5,'veniam','1987-03-23 14:31:11','2018-03-13 12:10:11'),(6,'molestias','1975-07-08 16:36:49','2017-01-26 21:33:04'),(7,'fugiat','2007-09-22 13:23:59','2020-01-03 08:00:30'),(8,'deleniti','1980-11-24 17:58:09','2010-12-08 23:39:10'),(9,'esse','2013-05-29 20:51:00','1996-08-08 15:53:37'),(10,'dolor','1970-04-26 03:20:40','2009-08-09 23:06:59'),(11,'enim','2009-10-15 10:54:20','2002-04-08 23:27:34'),(12,'sapiente','1993-03-17 02:45:47','2015-12-08 16:26:35'),(13,'eveniet','1972-08-10 23:34:13','2002-02-01 14:15:53'),(14,'quod','2021-07-18 03:13:27','1995-12-06 16:04:15'),(15,'cumque','1995-07-17 18:23:24','1990-08-19 14:19:34'),(16,'culpa','1999-05-26 01:24:04','1998-05-04 06:08:18'),(17,'ut','2019-03-19 10:55:38','1983-11-09 10:25:27'),(18,'et','1999-04-18 22:49:26','2013-12-11 00:37:39'),(19,'omnis','1976-02-16 12:41:00','2004-10-19 00:03:27'),(20,'et','1997-11-27 03:19:31','2018-12-18 01:32:32');
+/*!40000 ALTER TABLE `media_types` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `messages`
+--
+
+DROP TABLE IF EXISTS `messages`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `messages` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `from_user_id` bigint(20) unsigned NOT NULL,
+  `to_user_id` bigint(20) unsigned NOT NULL,
+  `body` text COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  UNIQUE KEY `id` (`id`),
+  KEY `from_user_id` (`from_user_id`),
+  KEY `to_user_id` (`to_user_id`),
+  CONSTRAINT `messages_ibfk_1` FOREIGN KEY (`from_user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `messages_ibfk_2` FOREIGN KEY (`to_user_id`) REFERENCES `users` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `messages`
+--
+
+LOCK TABLES `messages` WRITE;
+/*!40000 ALTER TABLE `messages` DISABLE KEYS */;
+INSERT INTO `messages` VALUES (1,1,1,'Sunt corrupti autem qui quos cum consequatur. Ut debitis aperiam sit recusandae non. Dolorem rerum facere dolorum quia qui a rerum.','2005-03-12 10:17:28'),(2,2,2,'Ducimus quisquam qui dolor quia laudantium. Eum voluptate sed vero fugiat exercitationem non. Maiores aperiam rerum eum consequuntur quia eveniet aut. Quidem qui facilis velit et.','1973-01-02 18:35:14'),(3,3,3,'Eum non repellat tempore recusandae dolorem quos eum consequatur. Et ut quaerat laudantium et non qui porro.','1996-07-03 09:41:15'),(4,4,4,'Voluptatum numquam excepturi aliquid. Eos aliquid ut et tenetur assumenda iusto doloremque. Animi adipisci omnis veritatis odio consectetur vero. Et vel provident doloribus culpa et.','1999-08-09 15:40:23'),(5,5,5,'Est quia ipsum nostrum molestiae voluptas voluptatem vero. Ea ex est et vel numquam et. Non id omnis accusamus sint voluptatem commodi velit ullam. Enim quod magni ut soluta cumque dolorum illum. Aut quod inventore non fugit et neque omnis minus.','2007-06-14 16:42:59'),(6,6,6,'Eos inventore voluptas et quis. Est libero excepturi aut consequatur aut tempora. Enim voluptatibus id praesentium sapiente praesentium sunt qui. Ea deserunt rerum porro autem aliquam dignissimos temporibus quibusdam.','1975-12-07 17:38:44'),(7,7,7,'Enim similique reiciendis fuga temporibus accusantium repellendus. Dolores nisi non sed quaerat. Ratione asperiores pariatur veniam dicta quas nisi recusandae.','1989-10-29 12:07:01'),(8,8,8,'Quibusdam incidunt distinctio accusantium recusandae. Nulla quia dolor quas odio consequatur aspernatur enim. Sequi rerum at velit illo quia tempore.','1978-04-13 03:50:34'),(9,9,9,'Laboriosam et commodi sapiente optio blanditiis omnis. Nisi nesciunt quasi autem facilis et enim dolorum. Dolorem non necessitatibus earum id assumenda laborum qui magni. Quasi nemo quod nihil iusto consequatur autem deleniti illum.','1980-03-18 12:08:55'),(10,10,10,'Dolorem officiis occaecati vel rerum voluptatem ex eligendi. Animi aliquid sit atque harum ex. Asperiores cumque eligendi voluptas aut dignissimos. Accusamus praesentium similique necessitatibus unde aut sunt dolorum.','1982-10-30 06:41:45'),(11,11,11,'Voluptates illum aut repellat enim ut exercitationem. Suscipit pariatur natus mollitia tenetur aperiam nulla. Maxime enim minima voluptas pariatur quis aut eos dolore.','2002-12-23 08:25:03'),(12,12,12,'Fuga numquam dolor rerum neque consequuntur qui neque. Laudantium ipsa reprehenderit laborum quis velit deserunt. Nemo velit accusamus qui debitis consequuntur. Dolores veniam ut magni aspernatur sequi quo eius. Non odio ea magnam.','1977-08-17 20:51:11'),(13,13,13,'Quia doloribus et nihil et nihil doloribus et. Debitis sunt quam ipsam deserunt voluptas. Vel praesentium sit nulla delectus autem illo voluptatem quas. Voluptatem adipisci ut earum non soluta vel.','1998-03-04 14:36:28'),(14,14,14,'Quis quia perspiciatis minus alias facilis. Dolor et laborum quis magni. Fuga nostrum voluptas esse iure et. Ut ipsum exercitationem qui incidunt animi quam.','1977-08-30 17:02:46'),(15,15,15,'Ea rem at quod facere sunt. Dolorem pariatur libero ipsam sint ut qui. Ut inventore quos excepturi non dolorum. Totam rerum harum vel veniam officia ipsam maxime.','1978-03-02 17:56:49'),(16,16,16,'Sit doloribus quasi ad aut repellendus voluptates. Id et vero officia ut quo. Esse voluptatibus recusandae qui voluptas facere.','2009-02-24 03:22:35'),(17,17,17,'Iste tenetur et quisquam et minima corporis officia ab. Dolores occaecati ipsum hic nulla animi. Enim adipisci iusto praesentium velit eius repudiandae. Eos alias recusandae nesciunt voluptate aut sit neque est.','1986-07-14 13:58:44'),(18,18,18,'Ullam dignissimos possimus nam aut. Voluptatibus quas iusto pariatur et veniam. Perferendis nihil non quidem laudantium saepe blanditiis et.','2012-02-28 10:58:51'),(19,19,19,'Autem veniam ratione et placeat. Voluptas et similique asperiores repudiandae facere beatae vel.','2012-08-16 20:05:38'),(20,20,20,'Velit et id consequatur. Quam minus saepe omnis repellat deserunt sit. Aut dolorem qui aspernatur optio.','1997-01-22 10:33:14');
+/*!40000 ALTER TABLE `messages` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `model_cars`
+--
+
+DROP TABLE IF EXISTS `model_cars`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `model_cars` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `model` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `brand` varchar(150) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `model_cars`
+--
+
+LOCK TABLES `model_cars` WRITE;
+/*!40000 ALTER TABLE `model_cars` DISABLE KEYS */;
+INSERT INTO `model_cars` VALUES (1,'corrupti','quia'),(2,'corrupti','fugiat'),(3,'veritatis','exercitationem'),(4,'consequatur','natus'),(5,'perferendis','labore'),(6,'eius','saepe'),(7,'impedit','aliquam'),(8,'optio','voluptate'),(9,'necessitatibus','voluptatem'),(10,'doloribus','quam'),(11,'aut','facilis'),(12,'culpa','saepe'),(13,'dolor','nihil'),(14,'perferendis','maxime'),(15,'doloremque','nemo'),(16,'itaque','vero'),(17,'consequatur','unde'),(18,'corporis','quia'),(19,'qui','nihil'),(20,'praesentium','voluptas');
+/*!40000 ALTER TABLE `model_cars` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `orders` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `user_id` bigint(20) unsigned NOT NULL,
+  `product_id` bigint(20) unsigned NOT NULL,
+  UNIQUE KEY `id` (`id`),
+  KEY `user_id` (`user_id`),
+  KEY `product_id` (`product_id`),
+  CONSTRAINT `orders_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
+  CONSTRAINT `orders_ibfk_2` FOREIGN KEY (`product_id`) REFERENCES `products` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orders`
+--
+
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES (1,'1986-10-31 23:01:32',1,1),(2,'2005-02-25 06:14:06',2,2),(3,'1979-06-27 08:28:04',3,3),(4,'2021-03-31 07:15:34',4,4),(5,'2020-09-23 01:57:18',5,5),(6,'2020-12-07 11:06:37',6,6),(7,'2012-02-25 02:43:25',7,7),(8,'2012-04-27 02:48:18',8,8),(9,'1986-06-22 04:41:52',9,9),(10,'1995-11-14 10:30:43',10,10),(11,'2009-11-01 12:46:17',11,11),(12,'1998-01-15 08:11:01',12,12),(13,'2014-07-04 15:02:06',13,13),(14,'1978-06-01 19:52:45',14,14),(15,'1985-12-26 16:58:41',15,15),(16,'1992-05-15 09:27:30',16,16),(17,'1985-05-06 00:25:33',17,17),(18,'2004-11-04 03:55:37',18,18),(19,'1971-04-20 12:52:57',19,19),(20,'1990-05-04 18:28:10',20,20);
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `products`
+--
+
+DROP TABLE IF EXISTS `products`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `products` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `amount` bigint(20) unsigned DEFAULT NULL,
+  `products_type_id` bigint(20) unsigned NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `products_type_id` (`products_type_id`),
+  CONSTRAINT `products_ibfk_1` FOREIGN KEY (`products_type_id`) REFERENCES `products_type` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `products`
+--
+
+LOCK TABLES `products` WRITE;
+/*!40000 ALTER TABLE `products` DISABLE KEYS */;
+INSERT INTO `products` VALUES (1,21,1),(2,57673,2),(3,2,3),(4,54653,4),(5,1,5),(6,13742645,6),(7,1490,7),(8,209,8),(9,427,9),(10,4,10),(11,41312,11),(12,11,12),(13,635,13),(14,0,14),(15,5024688,15),(16,1445,16),(17,54,17),(18,1,18),(19,0,19),(20,845088,20);
+/*!40000 ALTER TABLE `products` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `products_type`
+--
+
+DROP TABLE IF EXISTS `products_type`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `products_type` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `products_type`
+--
+
+LOCK TABLES `products_type` WRITE;
+/*!40000 ALTER TABLE `products_type` DISABLE KEYS */;
+INSERT INTO `products_type` VALUES (1,'voluptatibus'),(2,'accusamus'),(3,'laborum'),(4,'tempore'),(5,'vel'),(6,'magnam'),(7,'et'),(8,'earum'),(9,'est'),(10,'aspernatur'),(11,'qui'),(12,'qui'),(13,'sapiente'),(14,'non'),(15,'neque'),(16,'beatae'),(17,'quibusdam'),(18,'cupiditate'),(19,'iure'),(20,'voluptas');
+/*!40000 ALTER TABLE `products_type` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `profiles`
+--
+
+DROP TABLE IF EXISTS `profiles`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `profiles` (
+  `user_id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `gender` char(1) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
+  `photo_id` bigint(20) unsigned DEFAULT NULL,
+  `created_at` datetime DEFAULT current_timestamp(),
+  `hometown` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `cars_id` bigint(20) unsigned DEFAULT NULL,
+  UNIQUE KEY `user_id` (`user_id`),
+  KEY `cars_id` (`cars_id`),
+  KEY `photo_id` (`photo_id`),
+  CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE NO ACTION ON UPDATE CASCADE,
+  CONSTRAINT `profiles_ibfk_1` FOREIGN KEY (`cars_id`) REFERENCES `cars` (`id`),
+  CONSTRAINT `profiles_ibfk_2` FOREIGN KEY (`photo_id`) REFERENCES `media` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `profiles`
+--
+
+LOCK TABLES `profiles` WRITE;
+/*!40000 ALTER TABLE `profiles` DISABLE KEYS */;
+INSERT INTO `profiles` VALUES (1,'m','1982-06-24',1,'1988-01-12 09:10:22','52461 Becker Wells Suite 605',1),(2,'m','1970-01-19',2,'1984-06-06 21:46:52','80969 Lucio Run',2),(3,'f','1992-12-22',3,'2011-09-08 10:11:57','1675 Angelita Manor Apt. 193',3),(4,'m','2001-10-11',4,'1994-05-03 20:33:22','93756 Hahn Run Apt. 569',4),(5,'m','2020-08-21',5,'1991-04-08 22:11:50','446 Kutch Lodge Suite 702',5),(6,'f','1987-01-08',6,'1988-09-10 06:50:37','454 Wolff Locks Apt. 058',6),(7,'f','2000-10-19',7,'1989-04-06 02:40:31','5322 Kristoffer Turnpike Suite 940',7),(8,'m','2021-04-30',8,'1995-03-12 05:41:14','3839 Taryn Curve Suite 405',8),(9,'m','2016-07-29',9,'2010-01-10 08:03:12','7374 Anita Views Suite 164',9),(10,'m','1984-09-20',10,'1981-06-27 00:27:10','549 Mills Union Apt. 052',10),(11,'f','2011-02-25',11,'2001-11-10 13:46:59','82973 Leffler Glens Suite 877',11),(12,'m','1984-12-16',12,'2016-04-15 00:18:40','17298 DuBuque Terrace',12),(13,'f','2021-01-09',13,'1977-01-14 20:33:29','09592 Rohan Squares',13),(14,'m','1991-01-14',14,'1987-09-22 15:19:44','26244 Kerluke Coves Suite 264',14),(15,'f','1989-07-22',15,'2009-05-03 08:16:42','18453 Crona Port Suite 481',15),(16,'f','2008-07-10',16,'1990-01-13 01:37:23','41833 Hickle Stravenue',16),(17,'f','2001-05-28',17,'2006-11-04 18:49:06','68389 Lorna Stravenue',17),(18,'m','2002-05-06',18,'1993-09-11 09:45:44','70347 Javier Street',18),(19,'f','2019-07-27',19,'1993-12-27 04:19:45','7549 Edwina Estates Suite 606',19),(20,'f','2007-11-12',20,'2019-01-08 22:14:19','391 Champlin Dale',20);
+/*!40000 ALTER TABLE `profiles` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8 */;
+CREATE TABLE `users` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `firstname` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `lastname` varchar(50) COLLATE utf8mb4_unicode_ci DEFAULT NULL COMMENT 'Фамиль',
+  `email` varchar(120) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `password_hash` varchar(100) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  `phone` bigint(20) unsigned DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `email` (`email`),
+  UNIQUE KEY `phone` (`phone`),
+  KEY `users_firstname_lastname_idx` (`firstname`,`lastname`)
+) ENGINE=InnoDB AUTO_INCREMENT=21 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='юзеры';
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES (1,'Emilia','O\'Keefe','klocko.lolita@example.org','6e6409ff88d08c57a923ea9de1b4ecf842a6ef1a',89558457656),(2,'Erich','Nienow','ikeeling@example.net','5cfe82709024f1f78827504619dfb5ccba74b373',89780001851),(3,'Piper','King','kbergstrom@example.com','78d0aa9bc9347ed4569b21c18620f630bc21264c',89705141189),(4,'Alexzander','Breitenberg','brandy.feil@example.net','30a7db951b0a73159bf5c23fd30ce98158cb809f',89683719898),(5,'Mathias','Purdy','peyton39@example.net','a5062a8dc0cab7716d01287769eb2a744ca00a48',89831464201),(6,'Lysanne','Schmitt','langworth.flavie@example.org','6eb1dd379a33fa9742ba919a4e38fdf349da2541',89691603845),(7,'Gerard','Heller','addison74@example.org','67a74deadb6b6cf22b064ac03788928adbd5486c',89132649073),(8,'Orlando','Reinger','berry13@example.org','318a926293846ca8aa4a00411592e8663ca72f42',89252973685),(9,'Joyce','Hettinger','hoeger.dallin@example.org','07f5845922ccb96b29a38d6359f27197b86be1f6',89430108924),(10,'Frank','Connelly','hershel86@example.com','7a8df34eeb204affb6bae3cdaf62240765d65458',89540362491),(11,'Zula','Streich','delpha30@example.net','5bf801a0201cf98d7d31634052b5c222b9d12529',89305356930),(12,'Kory','Powlowski','abby36@example.com','525abc892880b8c5d5a3d28c8231e6d49af64531',89422567004),(13,'Rachelle','Koch','haylee10@example.com','7ac1d07ee1be478e3efe64579efe69a6a1a0532b',89209205960),(14,'Talia','Johns','arodriguez@example.org','b3955d3f31bde75b333a675744a9eec4a33b4ce6',89366540031),(15,'Colin','Turcotte','mayer.dillon@example.net','b8923f4df6d666ca46fe9e44f0db5594afa9d949',89404780100),(16,'Stevie','Bashirian','jerrod.feest@example.net','80e19c30336b3f108c7ea4e9ea8cbc65dc44923f',89723297710),(17,'Edward','Windler','bell.nikolaus@example.org','b20a2c0b66a00b6ab9d9368e5ba00e2f9bcb7c6a',89724921755),(18,'Abigale','Schultz','runolfsdottir.rudolph@example.com','57a825be5c84930b26d4e1e88aa79298d970f99c',89301937951),(19,'Gabriel','Mills','mathilde.gutkowski@example.com','79defec6c83c14bd2a20fa84cc45d0baa6f4b521',89155979472),(20,'Wallace','McDermott','paige.reichel@example.net','f13d1e541715ee640c2d7649213ab424d03d266a',89810985283);
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
+/*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+
