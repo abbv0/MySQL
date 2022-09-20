@@ -1,0 +1,49 @@
+/*
+хранимые процедуры / триггеры;
+*/
+
+-- Тригерры, заполняющие таблицу logs, при заполнении 
+-- таблиц users, products_type, products 
+use exist;
+
+drop trigger if exists triger_log_users;
+DELIMITER //
+create trigger triger_log_users after insert 
+on users
+for each row
+begin
+	insert into logs(vremya, table_name, name, id_table) 
+	values(CURRENT_TIMESTAMP(),
+	'users', 
+	(select lastname from users order by id desc limit 1 ),
+	(select id from users order by id desc limit 1));
+end //
+delimiter ;
+
+drop trigger if exists triger_log_products_type;
+DELIMITER //
+create trigger triger_log_products_type after insert 
+on products_type
+for each row
+begin
+	insert into logs(vremya, table_name, name, id_table) 
+	values(CURRENT_TIMESTAMP(), 
+	'catalogs',
+	(select name from products_type order by id desc limit 1 ),
+	(select id from products_type order by id desc limit 1 ));
+end //
+delimiter ;
+
+drop trigger if exists triger_log_products;
+DELIMITER //
+create trigger triger_log_products after insert 
+on products
+for each row
+begin
+	insert into logs(vremya, table_name, name, id_table) 
+	values(CURRENT_TIMESTAMP(), 
+	'products', 
+	'noname',
+	(select id from products order by id desc limit 1));
+end //
+delimiter ;
