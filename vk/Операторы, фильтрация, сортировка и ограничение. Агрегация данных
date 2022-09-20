@@ -1,0 +1,41 @@
+/*
+Пусть задан некоторый пользователь. Из всех пользователей соц. сети найдите человека, который больше всех общался с выбранным пользователем (написал ему сообщений).
+*/
+
+use vk;
+
+select count(from_user_id) as kolvo, from_user_id as otkogo
+from messages 
+where to_user_id=1
+group by otkogo
+order by kolvo desc
+limit 1;
+
+/*
+Подсчитать общее количество лайков, которые получили пользователи младше 10 лет..
+*/
+
+use vk;
+
+select count(user_id) as kolvo
+from likes
+where user_id in (
+		select user_id from profiles where TIMESTAMPDIFF(YEAR, birthday, NOW())<10)
+
+
+/*
+Определить кто больше поставил лайков (всего): мужчины или женщины.
+*/
+
+use vk;
+select 'kolvo', 'gender'
+union all
+select count(*), 'female'
+from likes 
+where user_id in (select user_id from profiles where gender='f')
+union all
+select count(*), 'male'
+from likes 
+where user_id in (select user_id from profiles where gender='m')
+order by kolvo 
+limit 1;
