@@ -1,0 +1,35 @@
+/*
+скрипты характерных выборок;
+*/
+
+-- Запрос, выдающий пользователя, который больше всех написал сообщений пользователю 1.
+use exist;
+
+select count(messages.from_user_id) as count_messages, from_user_id as from_user, users.firstname, users.lastname
+from messages 
+join users on users.id = messages.from_user_id
+where messages.to_user_id=1
+group by from_user
+order by count_messages desc
+limit 1;
+
+
+-- Запрос, выдающий средний возраст пользователей платформы
+use exist; 
+
+select avg(
+    (YEAR(CURRENT_DATE) - YEAR(birthday)) -                            
+    (DATE_FORMAT(CURRENT_DATE, '%m%d') < DATE_FORMAT(birthday, '%m%d'))) as avg_age
+    from profiles;
+    
+    
+-- Запрос, сортирующий пользователей по количеству заказов.
+use exist;
+
+SELECT u.id, u.firstname, u.lastname, count(o.id) as count_orders
+FROM users u
+JOIN orders o
+ON (o.user_id = u.id)
+GROUP BY u.id
+HAVING COUNT(o.id) > 0
+order by count_orders desc;
