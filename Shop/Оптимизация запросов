@@ -1,0 +1,56 @@
+/*
+Создайте таблицу logs типа Archive. Пусть при каждом создании записи в таблицах users, catalogs и products в таблицу logs 
+помещается время и дата создания записи, название таблицы, идентификатор первичного ключа и содержимое поля name.
+*/
+use shop;
+
+drop table if exists logs;
+create table logs(
+id serial,
+vremya DATETIME not null,
+table_name varchar(100) not null,
+name varchar(100),
+id_table bigint unsigned not null
+) ENGINE=ARCHIVE;
+
+drop trigger if exists triger_log_users;
+DELIMITER //
+create trigger triger_log_users after insert 
+on users
+for each row
+begin
+	insert into logs(vremya, table_name, name, id_table) 
+	values(CURRENT_TIMESTAMP(),
+	'users', 
+	(select name from users order by id desc limit 1 ),
+	(select id from users order by id desc limit 1));
+end //
+delimiter ;
+
+drop trigger if exists triger_log_catalogs;
+DELIMITER //
+create trigger triger_log_catalogs after insert 
+on catalogs
+for each row
+begin
+	insert into logs(vremya, table_name, name, id_table) 
+	values(CURRENT_TIMESTAMP(), 
+	'catalogs',
+	(select name from catalogs order by id desc limit 1 ),
+	(select id from catalogs order by id desc limit 1 ));
+end //
+delimiter ;
+
+drop trigger if exists triger_log_products;
+DELIMITER //
+create trigger triger_log_products after insert 
+on products
+for each row
+begin
+	insert into logs(vremya, table_name, name, id_table) 
+	values(CURRENT_TIMESTAMP(), 
+	'products', 
+	(select name from products order by id desc limit 1),
+	(select id from products order by id desc limit 1));
+end //
+delimiter ;
