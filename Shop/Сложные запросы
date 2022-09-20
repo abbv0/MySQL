@@ -1,0 +1,22 @@
+/*
+Составьте список пользователей users, которые осуществили хотя бы один заказ orders в интернет магазине.
+*/
+
+use shop;
+
+SELECT users.id, users.name
+FROM users
+JOIN orders AS j 
+ON (j.user_id = users.id)
+GROUP BY users.name
+HAVING COUNT(j.id) > 0;
+
+/*
+Выведите список товаров products и разделов catalogs, который соответствует товару.
+*/
+
+use shop;
+
+select products.name as product_name, j.name as catalog_name
+from products 
+join catalogs as j on (j.id = products.catalog_id);
