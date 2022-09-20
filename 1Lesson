@@ -1,0 +1,28 @@
+/* Задача 1
+Установите СУБД MySQL. Создайте в домашней директории файл 
+.my.cnf, задав в нем логин и пароль, который указывался при установке.
+*/
+[client]
+user=root
+password=********
+
+/* Задача 2
+Создайте базу данных example, разместите в ней таблицу users, 
+состоящую из двух столбцов, числового id и строкового name.
+*/
+CREATE DATABASE example;
+USE example;
+CREATE TABLE `users` (
+  `id` int unsigned NOT NULL,
+  `name` varchar(255) DEFAULT NULL)
+
+
+/* Задача 3
+Создайте дамп базы данных example из предыдущего задания, 
+разверните содержимое дампа в новую базу данных sample.
+*/
+ mysqldump example > example.sql 
+ mysql
+CREATE DATABASE sample;
+exit
+ mysql sample < example.sql
