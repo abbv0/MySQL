@@ -1,0 +1,31 @@
+/*
+Представления;
+*/
+
+-- Представление, выдающее все названия медиа-файлов и их категорию.
+
+use exist;
+
+drop view if exists media_category;
+create view media_category as select m.filename as filename, t.name as name_of_type
+				   from media as m
+				   join media_types as t on m.media_type_id = t.id
+				   order by name_of_type;
+select * from media_category;
+
+
+-- Представление, выдающее по убыванию
+-- количество заказов на каждый тип продукта
+use exist;
+
+drop view if exists count_of_orders_by_product;
+create view count_of_orders_by_product as
+	select t.name as product_type, count(t.name) as count_orders
+	from products_type as t 
+	join products as p on p.products_type_id = t.id
+	join orders as o on o.product_id = p.id
+	group by t.name
+	order by count_orders desc
+;
+
+select * from count_of_orders_by_product;
